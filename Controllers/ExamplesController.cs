@@ -12,24 +12,7 @@ namespace multithreading.Controllers
     public class ExamplesController : ControllerBase
     {
 
-        // GET api/examples/single
-        [HttpGet("single")]
-        public async Task<ActionResult<String>> GetSingle()
-        {
-            String res = await Task.Run<String>(() =>
-            {
-                Thread.Sleep(1000);
-                return String.Format("Thread {0} is returning this wonderful String to you.", Thread.CurrentThread.ManagedThreadId);
-            });
-
-            return Ok(res);
-        }
-
-        // GET api/examples/multiple
-        [HttpGet("multiple")]
-        public async Task<ActionResult<IList<String>>> GetMultiple()
-        {
-            List<String> list = new List<String>
+        List<String> list = new List<String>
             { "Kellye",
             "Tressie",
             "Tamatha",
@@ -41,24 +24,76 @@ namespace multithreading.Controllers
             "Tillie",
             "Norbert" };
 
-            List<String> res = new List<String>();
-
-            List<Task> tasks = list.Select(name => ProcessName(name)).ToList();
-            var call = Task.WhenAll(tasks).ContinueWith(result => {
-                Console.WriteLine(result);
+        // GET api/examples/single
+        [HttpGet("single")]
+        public async Task<ActionResult<String>> GetSingle()
+        {
+            String res = await Task.Run<String>(() =>
+            {
+                Thread.Sleep(1000);
+                return String.Format("Thread {0} processed this wonderful String to you.", Thread.CurrentThread.ManagedThreadId);
             });
-
-            await call;
 
             return Ok(res);
         }
 
-        static async Task ProcessName(String name)
+        // GET api/examples/multiple
+        [HttpGet("multiple")]
+        public async Task<ActionResult<IList<String>>> GetMultiple()
         {
-            await Task.Run(() =>
+
+            IList<String> result = new List<String>();
+
+            Task<String>[] tasks = list.Select(name => GetNameTask(name)).ToArray();
+            await Task.WhenAll(tasks);
+
+            for (int i = 0; i < tasks.Count(); i++)
             {
+                result.Add(tasks[i].Result);
+            }
+
+            return Ok(result);
+        }
+
+        // GET api/examples/semaphore
+        [HttpGet("semaphore/{count:int}")]
+        public async Task<ActionResult<IList<String>>> GetMultipleWithSemaphore(int count)
+        {
+
+            Semaphore semaphoreObject = new Semaphore(initialCount: count, maximumCount: count);
+
+            IList<String> result = new List<String>();
+
+            Task<String>[] tasks = list.Select(name => GetNameTask(name, semaphoreObject)).ToArray();
+            await Task.WhenAll(tasks);
+
+            for (int i = 0; i < tasks.Count(); i++)
+            {
+                result.Add(tasks[i].Result);
+            }
+
+            return Ok(result);
+        }
+
+        private static Task<String> GetNameTask(String name)
+        {
+            return GetNameTask(name, null);
+        }
+
+        private static Task<String> GetNameTask(String name, Semaphore semaphore)
+        {
+            return Task<String>.Run(() =>
+            {
+                if (semaphore != null) {
+                    semaphore.WaitOne();
+                }
+                Console.WriteLine("[START] - Thread {0} started processing {1}", Thread.CurrentThread.ManagedThreadId, name);
                 Thread.Sleep(5000);
-                Console.WriteLine(String.Format("Thread {0} processed {1}", Thread.CurrentThread.ManagedThreadId, name));
+                Console.WriteLine(String.Format("[END] - Thread {0} processed {1}", Thread.CurrentThread.ManagedThreadId, name));
+                if (semaphore != null) {
+                    semaphore.Release();
+                }
+                return String.Format("Thread {0} processed {1}", Thread.CurrentThread.ManagedThreadId, name);
             });
         }
     }
