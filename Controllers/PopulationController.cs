@@ -8,6 +8,7 @@ using System.Web;
 using multithreading.Model;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using multithreading.services;
 
 namespace multithreading.Controllers
 {
@@ -16,33 +17,28 @@ namespace multithreading.Controllers
     public class PopulationController : ControllerBase
     {
 
-        private readonly IHttpClientFactory _httpClientFactory;
+        private readonly ICountryService _countryService;
   
-        public PopulationController(IHttpClientFactory httpClientFactory)
+        public PopulationController(ICountryService countryService)
         {
-            _httpClientFactory = httpClientFactory;
+            _countryService = countryService;
         }
         
         // GET api/population/
         [HttpGet]
         public async Task<ActionResult<List<Country>>> GetAll()
         {
-            var client = _httpClientFactory.CreateClient();
-            client.BaseAddress = new Uri("https://restcountries.eu");
-            string content = await client.GetStringAsync("/rest/v2/all");
-            return Ok(JsonConvert.DeserializeObject<List<Country>>(content));
+            var result = await this._countryService.GetAll();
+            return Ok(result);
         }
 
         // GET api/population/name/uk
-        [HttpGet("name/{str}")]
-        public async Task<ActionResult<List<Country>>> GetByQueryString(string str)
-        {
-            var client = _httpClientFactory.CreateClient();
-            client.BaseAddress = new Uri("https://restcountries.eu");
-            string content = await client.GetStringAsync(String.Format("/rest/v2/name/{0}", str));
-            Console.WriteLine(content);
-            return Ok(JsonConvert.DeserializeObject<List<Country>>(content));
-        }
+        // [HttpGet("name/{str}")]
+        // public async Task<ActionResult<List<Country>>> GetByQueryString(string str)
+        // {
+        //     string content = await _countryClient.GetStringAsync(String.Format("/rest/v2/name/{0}", str));
+        //     return Ok(JsonConvert.DeserializeObject<List<Country>>(content));
+        // }
 
     }
 }
