@@ -1,4 +1,4 @@
-http://sqlfiddle.com/#!18/cca37/19
+-- You can run the query here: http://sqlfiddle.com/#!18/cca37/19
 
 create table DONOR (
     BG varchar(5) NOT NULL,
