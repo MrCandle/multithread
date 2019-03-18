@@ -24,7 +24,10 @@ namespace multithreading.Controllers
             "Tillie",
             "Norbert" };
 
-        // GET api/examples/single
+        /// <summary>Will process a string in one Thread.</summary>
+        /// <returns>A newly created TodoItem</returns>
+        /// <response code="201">Returns the newly created item</response>
+        /// <response code="400">If the item is null</response>   
         [HttpGet("single")]
         public async Task<ActionResult<String>> GetSingle()
         {
