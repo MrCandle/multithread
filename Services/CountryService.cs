@@ -2,10 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
-using multithreading.Model;
+using Multithreading.Model;
 using Newtonsoft.Json;
 
-namespace multithreading.services
+namespace Multithreading.Services
 {
     public class CountryService : ICountryService
     {

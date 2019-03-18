@@ -12,10 +12,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using multithreading.services;
+using Multithreading.Services;
 using Swashbuckle.AspNetCore.Swagger;
 
-namespace multithreading
+namespace Multithreading
 {
     public class Startup
     {

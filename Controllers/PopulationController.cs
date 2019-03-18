@@ -5,12 +5,12 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
-using multithreading.Model;
+using Multithreading.Model;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using multithreading.services;
+using Multithreading.Services;
 
-namespace multithreading.Controllers
+namespace Multithreading.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

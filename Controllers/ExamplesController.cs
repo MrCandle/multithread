@@ -5,7 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
-namespace multithreading.Controllers
+namespace Multithreading.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

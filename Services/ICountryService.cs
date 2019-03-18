@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using multithreading.Model;
+using Multithreading.Model;
 
-namespace multithreading.services
+namespace Multithreading.Services
 {
     public interface ICountryService
     {
