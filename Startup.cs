@@ -12,6 +12,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using multithreading.services;
 using Swashbuckle.AspNetCore.Swagger;
 
 namespace multithreading
@@ -41,7 +42,7 @@ namespace multithreading
                 c.IncludeXmlComments(xmlPath);
             });
 
-
+            services.AddHttpClient<ICountryService, CountryService>().SetHandlerLifetime(TimeSpan.FromMinutes(5));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
